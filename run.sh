@@ -105,6 +105,23 @@ add-self-loops data/gmm/gmm.mdl fst/rds-min-det-HaCLG.fst fst/HCLG.fst \
 echo "[Info]: add self loop for hmm"
 echo "[Info]: finish generating HCLG graph"
 
+# print fst graph
+if [ ! -d "graph" ]; then
+  mkdir "graph" && echo "[Info]: create graph directory to store fst jpg files"
+fi
 
+# convert fst to dot
+fstdraw --isymbols=data/lang/words.txt --osymbols=data/lang/words.txt fst/G.fst > graph/G.dot
+fstdraw --isymbols=data/lang/phones.txt --osymbols=data/lang/words.txt fst/L.fst > graph/L.dot
+fstdraw --osymbols=data/context_phone/context_symbols.txt fst/H.fst > graph/H.dot
+
+# Default jpg size might be very small, change the size for clear pics
+sed -i 's/size = \"8.5,11\"/size = \"25,40\"/g' graph/G.dot
+sed -i 's/size = \"8.5,11\"/size = \"25,40\"/g' graph/L.dot
+sed -i 's/size = \"8.5,11\"/size = \"25,40\"/g' graph/H.dot
+
+dot -Tjpg graph/G.dot > graph//G.jpg
+dot -Tjpg graph/L.dot > graph//L.jpg
+dot -Tjpg graph/H.dot > graph//H.jpg
 
 
